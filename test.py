@@ -1,1 +1,1 @@
-var
+base = a;
