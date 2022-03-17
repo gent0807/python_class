@@ -1,1 +1,1 @@
-base = a; #hdd
+base = a; # external hdd
