@@ -1,1 +1,1 @@
-base = a; # external hdd
+base = a; # external hdd good
