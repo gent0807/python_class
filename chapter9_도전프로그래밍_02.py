@@ -1,11 +1,14 @@
-import math
-import statistics
+from math import factorial as fact
+from statistics import median, mean, variance, stdev
 
-st=[80, 99, 77, 65, 92,74, 82]
+if __name__=='__main__':
+    for i in range(1, 21, 5):
+        print('{:2d}!={}'.format(i,fact(i)))
 
-print('1! = ', math.factorial(1), end='\n')
-print('6! = ', math.factorial(6), end='\n')
-print('11! = ', math.factorial(11), end='\n')
-print('16! = ', math.factorial(16), end='\n')
-
-print('중앙 값: ', )
+    st=[80, 99, 77, 65, 92, 74, 82]
+    print()
+    print(st)
+    print('중앙값:%.2f' % median(st))
+    print('평균:%.2f' % mean(st))
+    print('분산:%.2f' % variance(st))
+    print('표쥰편차:%.2f' % stdev(st))
