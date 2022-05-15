@@ -13,10 +13,22 @@ while True:
     try:
         s=' 0(종료), 1(가위), 2(바위), 3(보[자기]) 중 하나 선택>>'
         num=int(input(s))
-    exept:
+    except:
         num=1
     if num==0:
         break
     if not (0<=num<=3):
         print('\t입력이 잘못됐습니다. 다시 하세요!')
         continue
+    player= game[num]
+    com= choice(game[1:])
+
+    if player== com:
+        winner=0
+    elif madewin[player]==com:
+        winner=1
+    else:
+        winner=2
+    print('당신:', player, 'vs', '컴퓨터:', com)
+    print(msg[winner]+'\n')
+print('\n', ' 종료합니다.'.center(55,'='))
