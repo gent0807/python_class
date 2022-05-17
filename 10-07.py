@@ -19,4 +19,4 @@ canvas=Canvas(win, relief='solid', bd=2)
 canvas.pack(expand=True, fill='both')
 
 canvas.bind("<Button-1>", click)
-canvas.bind("<ButtonRelease-1", release)
+canvas.bind("<ButtonRelease-1>", release)
