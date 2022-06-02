@@ -1,5 +1,5 @@
 sum=0
-for i in 1.1, 2.5, 3.6, 4.2, 5.4:
+for i in 1.1, 2.5, 3.6, 4.2, 5.5:
     sum+=i
     print(i, sum)
 else:
