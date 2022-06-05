@@ -40,6 +40,7 @@ class Join:
 
 
 def openJoinPage():
+    sentence.set(' ')
     Join()
 def checkid():
     uid = et1.get().strip()
