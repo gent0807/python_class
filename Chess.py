@@ -5,9 +5,12 @@ class ChessGame:
         self.page.title('Chess Game')
         self.page.geometry('1000x700+220+30')
 
-        img=PhotoImage(file="C:\\Users\\tlsdb\\신윤섭의 개발\\PycharmProjects\\black.jpg")
 
-        self.lb1=Label(self.page, width=100, height=100, image=img)
+
+        self.lb1=Label(self.page, width=10, height=6, bg='grey')
+        self.lb2=Label(self.page, width=10, height=6, bg='beige')
+
+        self.lb2.grid(row=0,column=1,sticky=E)
         self.lb1.grid(row=0, column=0,sticky=E)
 
 
