@@ -1,10 +1,23 @@
 from tkinter import *
+class ChessGame:
+    def __init__(self):
+        self.page=Tk()
+        self.page.title('Chess Game')
+        self.page.geometry('1000x700+220+30')
 
+        img=PhotoImage(file="C:\\Users\\tlsdb\\신윤섭의 개발\\PycharmProjects\\black.jpg")
+
+        self.lb1=Label(self.page, width=100, height=100, image=img)
+        self.lb1.grid(row=0, column=0,sticky=E)
+
+
+        self.page.mainloop()
 class Join:
 
     def __init__(self):
         self.win=Tk()
-        self.win.geometry('400x400')
+        self.win.title('회원가입')
+        self.win.geometry('400x400+550+220')
         self.lb1=Label(self.win, text='ID')
         self.lb2=Label(self.win, text='PW')
         self.lb1.grid(row=0, column=0, sticky=E)
@@ -23,41 +36,57 @@ class Join:
         self.btn1.grid(row=0, column=0, padx=10)
         self.btn2.grid(row=0, column=1, padx=10)
 
-        self.text = StringVar(value=' ')
-        self.result=Label(self.win, width=20, textvariable=self.text)
+
+        self.comment=StringVar(value=' ')
+        self.text='기등록 아이디 혹은 빈칸이면 확인 눌러도 창 안 닫힘'
+        self.result=Label(self.win, width=40, text=self.text, textvariable=self.comment)
         self.result.grid(row=3, column=1)
         self.win.mainloop()
+
     def update(self):
         uid=self.et1.get().strip()
         pwd=self.et2.get().strip()
         if uid in usersdata.keys():
-            self.text.set("이미 존재하는 아이디입니다. 다시 입력하세요.")
+            self.comment.set('이미 존재하는 아이디입니다. 다시 입력하세요.')
         else:
-            usersdata[uid]=pwd
-            self.text.set("가입이 완료되었습니다.")
+            if(uid==''):
+                self.comment.set('빈칸입니다. 아이디를 입력하세요.')
+            else:
+                usersdata[uid]=pwd
+                self.comment.set('가입이 완료되었습니다.')
+                self.win.destroy()
     def close(self):
+        self.txt=''
         self.win.destroy()
 
 
 def openJoinPage():
     sentence.set(' ')
     Join()
+
 def checkid():
     uid = et1.get().strip()
     pwd = et2.get().strip()
     if uid in usersdata.keys():
-        '''if pwd==usersdata[uid]:
-        
-        '''
+        sentence.set(' ')
+        if pwd==usersdata[uid]:
+            sentence.set('contact')
+            ChessGame()
+        else:
+            sentence.set('암호를 확인하세요.')
 
     else:
-        sentence.set('등록된 아이디가 아닙니다.')
+        if(uid==''):
+            sentence.set('빈칸입니다. 아이디를 입력하세요.')
+        else:
+            sentence.set('등록된 아이디가 아닙니다.')
+
+
 
 usersdata={}
 
-
 loginPage=Tk()
-loginPage.geometry('400x400')
+loginPage.geometry('400x400+520+250')
 loginPage.title("로그인")
 
 lb1=Label(loginPage, text='ID')
@@ -79,7 +108,7 @@ bt1.grid(row=0, column=0, padx=10)
 bt2.grid(row=0, column=1, padx=10)
 
 sentence=StringVar(value=' ')
-loginResult=Label(loginPage, width=20, textvariable=sentence)
+loginResult=Label(loginPage, width=25, textvariable=sentence)
 loginResult.grid(row=3,column=1)
 
 
