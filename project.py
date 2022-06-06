@@ -1,9 +1,9 @@
 from tkinter import *
 import pygame
-class ChessGame:
+class Game:
     def __init__(self):
         self.page=Tk()
-        self.page.title('Chess Game')
+        self.page.title(' ')
         self.page.geometry('1000x800+220+30')
 
 
@@ -41,18 +41,24 @@ class Join:
         self.win.title('회원가입')
         self.win.geometry('400x400+550+220')
         self.win.config(bg='beige')
-        self.lb1=Label(self.win, text='ID')
-        self.lb2=Label(self.win, text='PW')
-        self.lb1.grid(row=0, column=0, sticky=E)
-        self.lb2.grid(row=1, column=0, sticky=E)
 
-        self.et1=Entry(self.win)
-        self.et2=Entry(self.win)
+        self.firstLabel=Label(self.win)
+        self.firstLabel.pack()
+        self.secondLabel=Label(self.win)
+        self.secondLabel.pack()
+
+        self.lb1=Label(self.firstLabel, text='ID')
+        self.lb2=Label(self.secondLabel, text='PW')
+        self.lb1.grid(row=0, column=0, sticky=E)
+        self.lb2.grid(row=0, column=0, sticky=E)
+
+        self.et1=Entry(self.firstLabel)
+        self.et2=Entry(self.secondLabel)
         self.et1.grid(row=0, column=1)
-        self.et2.grid(row=1, column=1)
+        self.et2.grid(row=0, column=1)
 
         self.lb=Label(self.win)
-        self.lb.grid(row=2, column=0, columnspan=2)
+        self.lb.pack()
 
         self.btn1=Button(self.lb, text='확인', command=self.update)
         self.btn2 =Button(self.lb, text='닫기', command=self.close)
@@ -63,7 +69,7 @@ class Join:
         self.comment=StringVar(value=' ')
         self.text='기등록 아이디 혹은 빈칸이면 확인 눌러도 창 안 닫힘'
         self.result=Label(self.win, width=40, text=self.text, textvariable=self.comment)
-        self.result.grid(row=3, column=1)
+        self.result.pack()
         self.win.mainloop()
 
     def update(self):
@@ -94,7 +100,7 @@ def checkid():
         sentence.set(' ')
         if pwd==usersdata[uid]:
             sentence.set('contact')
-            ChessGame()
+            Game()
         else:
             sentence.set('암호를 확인하세요.')
 
@@ -113,19 +119,24 @@ loginPage.geometry('400x400+520+250')
 loginPage.title("로그인")
 loginPage.config(bg='beige')
 
-lb1=Label(loginPage, text='ID')
-lb2=Label(loginPage, text='PW')
-lb1.grid(row=0, column=0, sticky=E)
-lb2.grid(row=1, column=0, sticky=E)
+firstLabel=Label(loginPage)
+firstLabel.pack()
+secondLabel=Label(loginPage)
+secondLabel.pack()
+
+lb1=Label(firstLabel, text='ID')
+lb2=Label(secondLabel, text='PW')
+lb1.grid(row=0, column=0)
+lb2.grid(row=0, column=0)
 
 
-et1=Entry(loginPage)
-et2=Entry(loginPage)
+et1=Entry(firstLabel)
+et2=Entry(secondLabel)
 et1.grid(row=0, column=1)
-et2.grid(row=1, column=1)
+et2.grid(row=0, column=1)
 
 lb=Label(loginPage)
-lb.grid(row=2,column=0,columnspan=2)
+lb.pack()
 bt1=Button(lb, text='회원가입', command=openJoinPage)
 bt2=Button(lb, text='로그인', command=checkid)
 bt1.grid(row=0, column=0, padx=10)
@@ -133,7 +144,7 @@ bt2.grid(row=0, column=1, padx=10)
 
 sentence=StringVar(value=' ')
 loginResult=Label(loginPage, width=25, textvariable=sentence, bg='beige')
-loginResult.grid(row=3,column=1)
+loginResult.pack()
 
 
 loginPage.mainloop()
