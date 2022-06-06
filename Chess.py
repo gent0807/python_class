@@ -1,17 +1,33 @@
 from tkinter import *
+import pygame
 class ChessGame:
     def __init__(self):
         self.page=Tk()
         self.page.title('Chess Game')
-        self.page.geometry('1000x700+220+30')
+        self.page.geometry('1000x800+220+30')
+
+        self.block=list()
+
+        for i in range(8):
+            for j in range(8):
+                if(i%2==0 and j%2==0):
+                    self.lb=Label(self.page, width=13, height=6, bg='grey')
+                    self.lb.grid(row=i, column=j, sticky=E)
+                    list[i].append(self.lb)
+                elif(i%2==0 and j%2==1):
+                    self.lb = Label(self.page, width=13, height=6, bg='yellow')
+                    self.lb.grid(row=i, column=j, sticky=E)
+                    list[i].append(self.lb)
+                elif(i%2==1 and j%2==0):
+                    self.lb = Label(self.page, width=13, height=6, bg='yellow')
+                    self.lb.grid(row=i, column=j, sticky=E)
+                    list[i].append(self.lb)
+                elif(i%2==1, j%2==1):
+                    self.lb = Label(self.page, width=13, height=6, bg='grey')
+                    self.lb.grid(row=i, column=j, sticky=E)
+                    list[i].append(self.lb)
 
 
-
-        self.lb1=Label(self.page, width=10, height=6, bg='grey')
-        self.lb2=Label(self.page, width=10, height=6, bg='beige')
-
-        self.lb2.grid(row=0,column=1,sticky=E)
-        self.lb1.grid(row=0, column=0,sticky=E)
 
 
         self.page.mainloop()
@@ -21,6 +37,7 @@ class Join:
         self.win=Tk()
         self.win.title('회원가입')
         self.win.geometry('400x400+550+220')
+        self.win.config(bg='beige')
         self.lb1=Label(self.win, text='ID')
         self.lb2=Label(self.win, text='PW')
         self.lb1.grid(row=0, column=0, sticky=E)
@@ -91,6 +108,7 @@ usersdata={}
 loginPage=Tk()
 loginPage.geometry('400x400+520+250')
 loginPage.title("로그인")
+loginPage.config(bg='beige')
 
 lb1=Label(loginPage, text='ID')
 lb2=Label(loginPage, text='PW')
