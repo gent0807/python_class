@@ -1,8 +1,8 @@
 import random
 import time
-
-import matplotlib
-
+from datetime import datetime
+import matplotlib.pyplot as plt
+import operator
 
 import pygame
 from tkinter import *
@@ -69,25 +69,42 @@ def checkid():
             sentence.set('contact')
 
             pygame.init()
+            pygame.mixer.init()
 
 
             size = [800, 900]
             screen = pygame.display.set_mode(size)
-            pygame.display.set_caption('Title')
+            pygame.display.set_caption('GAME')
 
+            shot = pygame.mixer.Sound("E:/shot.wav")
+            shot.set_volume(0.1)
+            explosion=pygame.mixer.Sound("E:/explosion.wav")
+            explosion.set_volume(0.1)
 
             clock = pygame.time.Clock()
             black=(0,0,0)
             color=black
+
+            #획득 결과 관여
             count=0
             energy=100
+            hit=0
+            score=0
+            start_time = datetime.now()
+            new_start_time=datetime.now()
+
+            #분기 결정
             k=0
+
+            #flag 변수들
             lmove = False
             rmove = False
             upmove = False
             downmove = False
             missilefire=False
             bombfire=False
+            GAMEOVER=False
+            clearpossible = False
 
             done=False
 
@@ -140,7 +157,23 @@ def checkid():
             negativeballs=list()
             positiveballs=list()
 
+            while done == False:
 
+                clock.tick(60)
+
+                for event in pygame.event.get():
+                    if event.type == pygame.KEYDOWN:
+                        if event.key==pygame.K_SPACE:
+                            done=True
+
+                screen.fill(color)
+                font=pygame.font.Font("C:/Windows/Fonts/ariblk.ttf", 15)
+                text = font.render("PRESS SPACE KEY TO START THE GAME", True, (255, 255, 255))
+                screen.blit(text, (225, round(size[1]/2-50)))
+
+                pygame.display.flip()
+
+            done=False
             while done == False:
 
                 clock.tick(60)
@@ -162,6 +195,7 @@ def checkid():
                             k=0
                         elif event.key==pygame.K_a:
                             bomb1=thing()
+                            shot.play()
                             count+=1
                             bomb1.insert_img("E:/bomb.png", 14, 14)
                             bomb1.x = craft.x
@@ -170,6 +204,7 @@ def checkid():
                             bomb1s.append(bomb1)
                         elif event.key==pygame.K_s:
                             bomb2=thing()
+                            shot.play()
                             count += 1
                             bomb2.insert_img("E:/bomb.png", 14, 14)
                             bomb2.x = craft.x
@@ -178,6 +213,7 @@ def checkid():
                             bomb2s.append(bomb2)
                         elif event.key==pygame.K_d:
                             bomb3=thing()
+                            shot.play()
                             count += 1
                             bomb3.insert_img("E:/bomb.png", 14, 14)
                             bomb3.x = craft.x+craft.sx-bomb3.sx/2
@@ -186,12 +222,18 @@ def checkid():
                             bomb3s.append(bomb3)
                         elif event.key==pygame.K_f:
                             bomb4=thing()
+                            shot.play()
                             count += 1
                             bomb4.insert_img("E:/bomb.png", 14, 14)
                             bomb4.x = craft.x+craft.sx-bomb4.sx/2
                             bomb4.y = craft.y+craft.sy/2-bomb4.sy/2
                             bomb4.transfer = 10
                             bomb4s.append(bomb4)
+                        elif event.key == pygame.K_r:
+                            if clearpossible:
+                                negativeballs=list()
+                                positiveballs=list()
+                                new_start_time=datetime.now()
                     elif event.type==pygame.KEYUP:
                         if event.key == pygame.K_LEFT:
                             lmove = False
@@ -203,7 +245,15 @@ def checkid():
                             downmove = False
                         elif event.key==pygame.K_SPACE:
                             missilefire=False
-                # 입력, 시간에 따른 변화
+
+                now_time = datetime.now()
+                delta_time=round((now_time-start_time).total_seconds())
+                another_delta_time=round((now_time-new_start_time).total_seconds())
+                if another_delta_time>=25:
+                    clearpossible=True
+                elif another_delta_time<25:
+                    clearpossible=False
+
                 if lmove==True:
                     craft.x-=craft.transfer
                     if(craft.x<=0):
@@ -224,6 +274,7 @@ def checkid():
                 if missilefire==True:
                     if k%5==0:
                         missile=thing()
+                        shot.play()
                         count+=1
                         missile.insert_img("E:/missile.jpg", 6, 15)
                         missile.x = round(craft.x+craft.sx/2-missile.sx/2)
@@ -239,7 +290,7 @@ def checkid():
                     negativeball.y= random.randrange(0, size[1]-negativeball.sy)
                     negativeballs.append(negativeball)
 
-                if random.random()>0.99:
+                if random.random()>0.98:
                     positiveball = ball()
                     positiveball.insert_img("E:/pball.png", 20, 20)
                     positiveball.x = random.randrange(0, size[0] - positiveball.sx)
@@ -252,8 +303,9 @@ def checkid():
                 bomb2garbage = list()
                 bomb3garbage = list()
                 bomb4garbage = list()
-                dnb_list=list()
-                dpb_list=list()
+
+
+
 
                 for i in range(len(missiles)):
                     m=missiles[i]
@@ -321,34 +373,6 @@ def checkid():
                     if pb.y>=size[1]-pb.sy or pb.y<=0:
                         pb.ytransfer*=-1
 
-                for i in range(len(missiles)):
-                    for j in range(len(negativeballs)):
-                        m=missiles[i]
-                        nb=negativeballs[j]
-                        if crash(m, nb)==True:
-                            garbageindex.append(i)
-                            dnb_list.append(j)
-
-                for i in range(len(negativeballs)):
-                    nb=negativeballs[i]
-                    if crash(nb,craft)==True:
-                        dnb_list.append(i)
-                        energy-=15
-                        if energy<0:
-                            done=True
-                            time.sleep(1)
-
-                for i in range(len(positiveballs)):
-                    pb=positiveballs[i]
-                    if crash(pb,craft)==True:
-                        dpb_list.append(i)
-                        energy+=10
-                        if energy>=100:
-                            energy=100
-
-                garbageindex = list(set(garbageindex))
-                dnb_list = list(set(dnb_list))
-
                 for i in garbageindex:
                     del missiles[i]
 
@@ -364,11 +388,201 @@ def checkid():
                 for i in bomb4garbage:
                     del bomb4s[i]
 
+                dm_list = list()
+                dnb_list = list()
+                for i in range(len(missiles)):
+                    for j in range(len(negativeballs)):
+                        m = missiles[i]
+                        nb = negativeballs[j]
+                        if crash(m, nb) == True:
+                            explosion.play()
+                            dm_list.append(i)
+                            dnb_list.append(j)
+                dm_list=list(set(dm_list))
+                dnb_list=list(set(dnb_list))
+                for i in dm_list:
+                    del missiles[i]
                 for i in dnb_list:
                     del negativeballs[i]
+                    hit+=1
 
+                dm1_list = list()
+                dpb_list = list()
+                for i in range(len(missiles)):
+                    for j in range(len(positiveballs)):
+                        m = missiles[i]
+                        pb = positiveballs[j]
+                        if crash(m, pb) == True:
+                            dm1_list.append(i)
+                            dpb_list.append(j)
+                dm1_list = list(set(dm1_list))
+                dnb_list = list(set(dpb_list))
+                for i in dm1_list:
+                    del missiles[i]
                 for i in dpb_list:
                     del positiveballs[i]
+
+
+                dnb_craft_list=list()
+                for i in range(len(negativeballs)):
+                    nb = negativeballs[i]
+                    if crash(nb, craft) == True:
+                        dnb_craft_list.append(i)
+                        energy -= 15
+                        if energy < 0:
+                            done = True
+                            GAMEOVER=True
+                for i in dnb_craft_list:
+                    del negativeballs[i]
+
+                dpb_craft_list=list()
+                for i in range(len(positiveballs)):
+                    pb = positiveballs[i]
+                    if crash(pb, craft) == True:
+                        dpb_craft_list.append(i)
+                        energy += 10
+                        if energy >= 100:
+                            energy = 100
+                for i in dpb_craft_list:
+                    del positiveballs[i]
+
+
+                usedbomb1=list()
+                dnb_bomb1_list=list()
+                for i in range(len(bomb1s)):
+                    for j in range(len(negativeballs)):
+                        b = bomb1s[i]
+                        nb = negativeballs[j]
+                        if crash(b, nb) == True:
+                            explosion.play()
+                            usedbomb1.append(i)
+                            dnb_bomb1_list.append(j)
+                usedbomb1=list(set(usedbomb1))
+                dnb_bomb1_list=list(set(dnb_bomb1_list))
+                for i in usedbomb1:
+                    del bomb1s[i]
+                for i in dnb_bomb1_list:
+                    del negativeballs[i]
+                    hit += 1
+
+                usedbomb2 = list()
+                dnb_bomb2_list = list()
+                for i in range(len(bomb2s)):
+                    for j in range(len(negativeballs)):
+                        b = bomb2s[i]
+                        nb = negativeballs[j]
+                        if crash(b, nb) == True:
+                            explosion.play()
+                            usedbomb2.append(i)
+                            dnb_bomb2_list.append(j)
+                usedbomb2 = list(set(usedbomb2))
+                dnb_bomb2_list = list(set(dnb_bomb2_list))
+                for i in usedbomb2:
+                    del bomb2s[i]
+                for i in dnb_bomb2_list:
+                    del negativeballs[i]
+                    hit += 1
+
+                usedbomb3 = list()
+                dnb_bomb3_list = list()
+                for i in range(len(bomb3s)):
+                    for j in range(len(negativeballs)):
+                        b = bomb3s[i]
+                        nb = negativeballs[j]
+                        if crash(b, nb) == True:
+                            explosion.play()
+                            usedbomb3.append(i)
+                            dnb_bomb3_list.append(j)
+                usedbomb3 = list(set(usedbomb3))
+                dnb_bomb3_list = list(set(dnb_bomb3_list))
+                for i in usedbomb3:
+                    del bomb3s[i]
+                for i in dnb_bomb3_list:
+                    del negativeballs[i]
+                    hit += 1
+
+                usedbomb4 = list()
+                dnb_bomb4_list = list()
+                for i in range(len(bomb4s)):
+                    for j in range(len(negativeballs)):
+                        b = bomb4s[i]
+                        nb = negativeballs[j]
+                        if crash(b, nb) == True:
+                            explosion.play()
+                            usedbomb4.append(i)
+                            dnb_bomb4_list.append(j)
+                usedbomb4 = list(set(usedbomb4))
+                dnb_bomb4_list = list(set(dnb_bomb4_list))
+                for i in usedbomb4:
+                    del bomb4s[i]
+                for i in dnb_bomb4_list:
+                    del negativeballs[i]
+                    hit += 1
+
+                errorbomb1 = list()
+                dpb_bomb1_list = list()
+                for i in range(len(bomb1s)):
+                    for j in range(len(positiveballs)):
+                        b = bomb1s[i]
+                        pb = positiveballs[j]
+                        if crash(b, pb) == True:
+                            errorbomb1.append(i)
+                            dpb_bomb1_list.append(j)
+                errorbomb1 = list(set(errorbomb1))
+                dpb_bomb1_list = list(set(dpb_bomb1_list))
+                for i in errorbomb1:
+                    del bomb1s[i]
+                for i in dpb_bomb1_list:
+                    del positiveballs[i]
+
+                errorbomb2 = list()
+                dpb_bomb2_list = list()
+                for i in range(len(bomb2s)):
+                    for j in range(len(positiveballs)):
+                        b = bomb2s[i]
+                        pb = positiveballs[j]
+                        if crash(b, pb) == True:
+                            errorbomb2.append(i)
+                            dpb_bomb2_list.append(j)
+                errorbomb2 = list(set(errorbomb2))
+                dpb_bomb2_list = list(set(dpb_bomb2_list))
+                for i in errorbomb2:
+                    del bomb2s[i]
+                for i in dpb_bomb2_list:
+                    del positiveballs[i]
+
+                errorbomb3 = list()
+                dpb_bomb3_list = list()
+                for i in range(len(bomb3s)):
+                    for j in range(len(positiveballs)):
+                        b = bomb3s[i]
+                        pb = positiveballs[j]
+                        if crash(b, pb) == True:
+                            errorbomb3.append(i)
+                            dpb_bomb3_list.append(j)
+                errorbomb3 = list(set(errorbomb3))
+                dpb_bomb3_list = list(set(dpb_bomb3_list))
+                for i in errorbomb3:
+                    del bomb3s[i]
+                for i in dpb_bomb3_list:
+                    del positiveballs[i]
+
+                errorbomb4 = list()
+                dpb_bomb4_list = list()
+                for i in range(len(bomb4s)):
+                    for j in range(len(positiveballs)):
+                        b = bomb4s[i]
+                        pb = positiveballs[j]
+                        if crash(b, pb) == True:
+                            errorbomb4.append(i)
+                            dpb_bomb4_list.append(j)
+                errorbomb4 = list(set(errorbomb4))
+                dpb_bomb4_list = list(set(dpb_bomb4_list))
+                for i in errorbomb4:
+                    del bomb4s[i]
+                for i in dpb_bomb4_list:
+                    del positiveballs[i]
+
 
                 screen.fill(color)
 
@@ -395,9 +609,56 @@ def checkid():
                 for pball in positiveballs:
                     pball.show()
 
+                font=pygame.font.Font("C:/Windows/Fonts/ariblk.ttf", 20)
+                text=font.render("hit target:{}  use weapon:{}".format(hit,count), True, (255,255,0))
+                screen.blit(text, (10,5))
+
+                font = pygame.font.Font("C:/Windows/Fonts/ariblk.ttf", 20)
+                time_text = font.render("time:{}".format(delta_time), True, (255, 255, 255))
+                screen.blit(time_text, (size[0]-90, 5))
+
+                font = pygame.font.Font("C:/Windows/Fonts/ariblk.ttf", 20)
+                clear_text = font.render("clearpossible:{}".format(clearpossible), True, (255, 255, 255))
+                screen.blit(clear_text, (size[0] - 230, 25))
+
+
+
                 pygame.display.flip()
 
+            while GAMEOVER==True:
+                clock.tick(60)
+                for event in pygame.event.get():
+                    if event.type==pygame.QUIT:
+                        GAMEOVER=0
+
+
+                count//=6
+                score=delta_time+hit-count
+                if(score<0):
+                    score=0
+
+                font=pygame.font.Font("C:/Windows/Fonts/ariblk.ttf", 40)
+                text=font.render("GAME OVER", True, (255,0,0))
+                screen.blit(text, (270, round(size[1]/2-50)))
+
+                font = pygame.font.Font("C:/Windows/Fonts/ariblk.ttf", 40)
+                score_text = font.render("score: {}".format(score), True, (0, 0, 255))
+                screen.blit(score_text, (290, round(size[1] / 2 - 90)))
+
+                pygame.display.flip()
             pygame.quit()
+
+            usersscore[uid]=score
+            userlist=sorted(usersscore.items(), key=operator.itemgetter(1),reverse=True)
+
+            a.set(userlist[0][0])
+            b.set(userlist[0][1])
+            c.set(userlist[1][0])
+            d.set(userlist[1][1])
+            e.set(userlist[2][0])
+            f.set(userlist[2][1])
+
+
         else:
             sentence.set('암호를 확인하세요.')
 
@@ -410,7 +671,9 @@ def checkid():
 
 
 
-usersdata={}
+usersdata=dict()
+usersscore=dict()
+userlist=list()
 
 loginPage=Tk()
 loginPage.geometry('400x400+520+250')
@@ -441,8 +704,66 @@ bt1.grid(row=0, column=0, padx=10)
 bt2.grid(row=0, column=1, padx=10)
 
 sentence=StringVar(value=' ')
-loginResult=Label(loginPage, width=25, textvariable=sentence, bg='beige')
+loginResult=Label(loginPage, width=24, textvariable=sentence, bg='beige')
 loginResult.pack()
 
+rankingResult=Label(loginPage, width=24, text="Ranking")
+rankingResult.pack()
+
+row1=Label(loginPage, width=24)
+row1.pack()
+
+row2=Label(loginPage, width=24)
+row2.pack()
+
+row3=Label(loginPage, width=24)
+row3.pack()
+
+row4=Label(loginPage, width=24)
+row4.pack()
+
+a=StringVar(value=' ')
+b=StringVar(value=' ')
+c=StringVar(value=' ')
+d=StringVar(value=' ')
+e=StringVar(value=' ')
+f=StringVar(value=' ')
+
+rankingLabel=Label(row1, width=8, text="순위")
+rankingLabel.grid(row=0, column=0)
+
+userLabel=Label(row1, width=8, text="아이디")
+userLabel.grid(row=0, column=1)
+
+scoreLabel=Label(row1,  width=8, text="점수")
+scoreLabel.grid(row=0, column=2)
+
+goldrankLabel = Label(row2, width=8, text=1)
+goldrankLabel.grid(row=0, column=0)
+
+goldidLabel=Label(row2, width=8, textvariable=a)
+goldidLabel.grid(row=0, column=1)
+
+goldscoreLabel=Label(row2,  width=8, textvariable=b)
+goldscoreLabel.grid(row=0, column=2)
+
+
+silverrankLabel = Label(row3, width=8, text=2)
+silverrankLabel.grid(row=0, column=0)
+
+silveridLabel=Label(row3, width=8, textvariable=c)
+silveridLabel.grid(row=0, column=1)
+
+silverscoreLabel=Label(row3,  width=8, text=userlist[1][1])
+silverscoreLabel.grid(row=0, column=2)
+
+brownrankLabel = Label(row4, width=8, text=3)
+brownrankLabel.grid(row=0, column=0)
+
+brownidLabel=Label(row4, width=8, text=userlist[2][0])
+brownidLabel.grid(row=0, column=1)
+
+brownscoreLabel=Label(row4,  width=8, text=userlist[2][1])
+brownscoreLabel.grid(row=0, column=2)
 
 loginPage.mainloop()
