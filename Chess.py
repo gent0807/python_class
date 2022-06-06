@@ -6,31 +6,34 @@ class ChessGame:
         self.page.title('Chess Game')
         self.page.geometry('1000x800+220+30')
 
-        self.block=list()
+
 
         for i in range(8):
+
             for j in range(8):
                 if(i%2==0 and j%2==0):
                     self.lb=Label(self.page, width=13, height=6, bg='grey')
                     self.lb.grid(row=i, column=j, sticky=E)
-                    list[i].append(self.lb)
+
                 elif(i%2==0 and j%2==1):
                     self.lb = Label(self.page, width=13, height=6, bg='yellow')
                     self.lb.grid(row=i, column=j, sticky=E)
-                    list[i].append(self.lb)
+
                 elif(i%2==1 and j%2==0):
                     self.lb = Label(self.page, width=13, height=6, bg='yellow')
                     self.lb.grid(row=i, column=j, sticky=E)
-                    list[i].append(self.lb)
+
                 elif(i%2==1, j%2==1):
                     self.lb = Label(self.page, width=13, height=6, bg='grey')
                     self.lb.grid(row=i, column=j, sticky=E)
-                    list[i].append(self.lb)
+
 
 
 
 
         self.page.mainloop()
+
+
 class Join:
 
     def __init__(self):
@@ -129,7 +132,7 @@ bt1.grid(row=0, column=0, padx=10)
 bt2.grid(row=0, column=1, padx=10)
 
 sentence=StringVar(value=' ')
-loginResult=Label(loginPage, width=25, textvariable=sentence)
+loginResult=Label(loginPage, width=25, textvariable=sentence, bg='beige')
 loginResult.grid(row=3,column=1)
 
 
