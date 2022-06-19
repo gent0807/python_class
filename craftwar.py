@@ -649,14 +649,17 @@ def checkid():
             pygame.quit()
 
             usersscore[uid]=score
-            userlist=sorted(usersscore.items(), key=operator.itemgetter(1),reverse=True)
+            userlist=sorted(usersscore.items(), key=operator.itemgetter(1), reverse=True)
 
-            a.set(userlist[0][0])
-            b.set(userlist[0][1])
-            c.set(userlist[1][0])
-            d.set(userlist[1][1])
-            e.set(userlist[2][0])
-            f.set(userlist[2][1])
+            if(len(userlist)>=1):
+                a.set(userlist[0][0])
+                b.set(userlist[0][1])
+            if(len(userlist)>=2):
+                c.set(userlist[1][0])
+                d.set(userlist[1][1])
+            if(len(userlist)>=3):
+                e.set(userlist[2][0])
+                f.set(userlist[2][1])
 
 
         else:
@@ -754,16 +757,16 @@ silverrankLabel.grid(row=0, column=0)
 silveridLabel=Label(row3, width=8, textvariable=c)
 silveridLabel.grid(row=0, column=1)
 
-silverscoreLabel=Label(row3,  width=8, text=userlist[1][1])
+silverscoreLabel=Label(row3,  width=8, textvariable=d)
 silverscoreLabel.grid(row=0, column=2)
 
 brownrankLabel = Label(row4, width=8, text=3)
 brownrankLabel.grid(row=0, column=0)
 
-brownidLabel=Label(row4, width=8, text=userlist[2][0])
+brownidLabel=Label(row4, width=8, textvariable=e)
 brownidLabel.grid(row=0, column=1)
 
-brownscoreLabel=Label(row4,  width=8, text=userlist[2][1])
+brownscoreLabel=Label(row4,  width=8, textvariable=f)
 brownscoreLabel.grid(row=0, column=2)
 
 loginPage.mainloop()
